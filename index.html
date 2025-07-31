@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Pelajaran</title>
+    <style>
+        /* Mengimpor Font */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+
+        :root {
+            --biru-cerah: #3498db;
+            --kuning-cerah: #f1c40f;
+            --putih: #ffffff;
+            --latar-belakang: #ecf0f1;
+            --teks: #34495e;
+            --transisi-cepat: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--latar-belakang);
+            color: var(--teks);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .schedule-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--putih);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(52, 73, 94, 0.15);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--biru-cerah);
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--putih);
+            font-weight: 800;
+        }
+        
+        .controls {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .day-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; 
+        }
+
+        .day-btn {
+            background-color: var(--putih);
+            border: 2px solid var(--biru-cerah);
+            color: var(--biru-cerah);
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: var(--transisi-cepat);
+        }
+
+        .day-btn:hover {
+            background-color: var(--kuning-cerah);
+            color: var(--teks);
+            border-color: var(--kuning-cerah);
+            transform: translateY(-3px);
+        }
+        
+        .day-btn.active {
+            background-color: var(--biru-cerah);
+            color: var(--putih);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+        }
+        
+        .info-display {
+            text-align: center;
+            padding: 15px 10px 5px 10px;
+            font-size: 1.1rem;
+            color: var(--teks);
+            font-weight: 700;
+        }
+        .info-display strong {
+            color: var(--biru-cerah);
+        }
+
+        .schedule-content {
+            padding: 25px;
+        }
+        
+        .schedule-day {
+            display: none;
+        }
+        .schedule-day.active {
+            display: grid;
+            gap: 15px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .subject-card {
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--kuning-cerah);
+            padding: 20px;
+            border-radius: 10px;
+            transition: var(--transisi-cepat);
+            cursor: pointer;
+            overflow: hidden;
+            will-change: transform;
+        }
+        .subject-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .subject-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .subject-details .subject-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .subject-details .subject-time {
+            font-size: 1rem;
+            background-color: var(--biru-cerah);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: var(--putih);
+            flex-shrink: 0;
+        }
+
+        .teacher-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+        }
+
+        .subject-card.active .teacher-info {
+            max-height: 100px;
+            opacity: 1;
+        }
+        .teacher-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: var(--latar-belakang);
+        }
+        .teacher-info .teacher-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            background-color: #f8f9fa;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="schedule-container">
+        <header>
+            <h1>Jadwal X Rpl-2</h1>
+        </header>
+
+        <div class="controls">
+            <div class="day-filter">
+                <button class="day-btn" data-day="senin">Senin</button>
+                <button class="day-btn" data-day="selasa">Selasa</button>
+                <button class="day-btn" data-day="rabu">Rabu</button>
+                <button class="day-btn" data-day="kamis">Kamis</button>
+                <button class="day-btn" data-day="jumat">Jumat</button>
+            </div>
+            <div class="info-display" id="info-display"></div>
+        </div>
+
+        <main class="schedule-content">
+            <div id="senin" class="schedule-day">
+                <div class="subject-card" data-teacher="Kurnia"><div class="subject-details"><span class="subject-name">Pendidikan Pancasila</span><span class="subject-time">07.15 - 08.45</span></div></div>
+                <div class="subject-card" data-teacher="Fajri"><div class="subject-details"><span class="subject-name">Bahasa Indonesia</span><span class="subject-time">08.45 - 09.30</span></div></div>
+                <div class="subject-card" data-teacher="Ceceh"><div class="subject-details"><span class="subject-name">Agama</span><span class="subject-time">09.45 - 12.00</span></div></div>
+                <div class="subject-card" data-teacher="Entin"><div class="subject-details"><span class="subject-name">Konsentrasi Keahlian</span><span class="subject-time">12.45 - 15.00</span></div></div>
+            </div>
+            <div id="selasa" class="schedule-day">
+                <div class="subject-card" data-teacher="Fajri"><div class="subject-details"><span class="subject-name">Bahasa Indonesia</span><span class="subject-time">06.30 - 08.45</span></div></div>
+                <div class="subject-card" data-teacher="Batalyon"><div class="subject-details"><span class="subject-name">Informatika</span><span class="subject-time">08.45 - 09.30</span></div></div>
+                <div class="subject-card"><div class="subject-details"><span class="subject-name">PJOK</span><span class="subject-time">09.45 - 12.00</span></div></div>
+                <div class="subject-card"><div class="subject-details"><span class="subject-name">BK</span><span class="subject-time">12.45 - 13.30</span></div></div>
+                <div class="subject-card" data-teacher="Kurnia"><div class="subject-details"><span class="subject-name">Bahasa Inggris</span><span class="subject-time">13.30 - 15.00</span></div></div>
+            </div>
+            <div id="rabu" class="schedule-day">
+                <div class="subject-card" data-teacher="Krisna"><div class="subject-details"><span class="subject-name">Konsentrasi Keahlian</span><span class="subject-time">06.30 - 09.30</span></div></div>
+                <div class="subject-card" data-teacher="Fify"><div class="subject-details"><span class="subject-name">IPAS</span><span class="subject-time">09.45 - 12.00</span></div></div>
+                <div class="subject-card" data-teacher="Entin"><div class="subject-details"><span class="subject-name">Konsentrasi Keahlian</span><span class="subject-time">12.45 - 15.00</span></div></div>
+            </div>
+            <div id="kamis" class="schedule-day">
+                <div class="subject-card" data-teacher="Linda"><div class="subject-details"><span class="subject-name">Seni Budaya</span><span class="subject-time">06.30 - 08.00</span></div></div>
+                <div class="subject-card" data-teacher="Kurnia"><div class="subject-details"><span class="subject-name">Bahasa Inggris</span><span class="subject-time">08.00 - 09.30</span></div></div>
+                <div class="subject-card" data-teacher="Elvi"><div class="subject-details"><span class="subject-name">Matematika</span><span class="subject-time">09.45 - 11.15</span></div></div>
+                <div class="subject-card" data-teacher="Entin"><div class="subject-details"><span class="subject-name">Dasar Program Keahlian</span><span class="subject-time">11.15 - 12.00</span></div></div>
+                <div class="subject-card" data-teacher="Entin"><div class="subject-details"><span class="subject-name">Konsentrasi Keahlian</span><span class="subject-time">12.45 - 15.00</span></div></div>
+            </div>
+            <div id="jumat" class="schedule-day">
+                <div class="subject-card" data-teacher="Fify"><div class="subject-details"><span class="subject-name">IPAS</span><span class="subject-time">07.30 - 09.45</span></div></div>
+                <div class="subject-card" data-teacher="Fify"><div class="subject-details"><span class="subject-name">Sejarah</span><span class="subject-time">10.00 - 11.30</span></div></div>
+                <div class="subject-card" data-teacher="Elvi"><div class="subject-details"><span class="subject-name">Matematika</span><span class="subject-time">12.45 - 14.15</span></div></div>
+            </div>
+        </main>
+        
+        <footer>
+            &copy; 2025 Ananda
+        </footer>
+    </div>
+
+    <script>
+        const dayButtons = document.querySelectorAll('.day-btn');
+        const schedules = document.querySelectorAll('.schedule-day');
+        const infoDisplay = document.getElementById('info-display');
+        const allCards = document.querySelectorAll('.subject-card');
+
+        const teachersData = {
+            'Fajri': { name: 'Bu Fajri', img: 'https://placehold.co/100x100/3498db/ffffff?text=F' },
+            'Fify': { name: 'Bu Fify', img: 'https://placehold.co/100x100/f1c40f/34495e?text=F' },
+            'Ceceh': { name: 'Pak Ceceh', img: 'https://placehold.co/100x100/e74c3c/ffffff?text=C' },
+            'Elvi': { name: 'Bu Elvi', img: 'https://placehold.co/100x100/2ecc71/ffffff?text=E' },
+            'Kurnia': { name: 'Bu Kurnia', img: 'https://placehold.co/100x100/9b59b6/ffffff?text=K' },
+            'Linda': { name: 'Bu Linda', img: 'https://placehold.co/100x100/e67e22/ffffff?text=L' },
+            'Entin': { name: 'Bu Entin', img: 'https://placehold.co/100x100/1abc9c/ffffff?text=E' },
+            'Batalyon': { name: 'Pak Batalyon Tempur', img: 'https://placehold.co/100x100/c0392b/ffffff?text=B' },
+            'Krisna': { name: 'Bpk. Krisna', img: 'https://placehold.co/100x100/34495e/ffffff?text=K' }
+        };
+
+        // **DIPERBARUI**: Teks sapaan sesuai permintaan terbaru
+        const greetings = {
+            senin: "Yuk bisa yuk, baru hari pertama! 💪",
+            selasa: "Seruu, nanti olahraga! ⚽",
+            rabu: "Semoga ga pramuka... 🤞",
+            kamis: "Aduh, pelajaran susah semua! 🤯",
+            jumat: "Sama kaya Kamis, bedanya BESOK LIBUR! 🎉"
+        };
+
+        function updateScheduleView(day) {
+            dayButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.day === day));
+            schedules.forEach(schedule => schedule.classList.toggle('active', schedule.id === day));
+            
+            const activeSchedule = document.getElementById(day);
+            const subjectCount = activeSchedule.children.length;
+            infoDisplay.innerHTML = `${greetings[day]} Kamu punya <strong>${subjectCount}</strong> sesi belajar hari ini.`;
+        }
+
+        dayButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateScheduleView(button.dataset.day);
+            });
+        });
+
+        allCards.forEach(card => {
+            const teacherKey = card.dataset.teacher;
+            if (teachersData[teacherKey]) {
+                const teacher = teachersData[teacherKey];
+                const teacherInfoDiv = document.createElement('div');
+                teacherInfoDiv.className = 'teacher-info';
+                teacherInfoDiv.innerHTML = `
+                    <img src="${teacher.img}" alt="Foto ${teacher.name}">
+                    <span class="teacher-name">${teacher.name}</span>
+                `;
+                card.appendChild(teacherInfoDiv);
+            }
+            
+            card.addEventListener('click', () => {
+                const wasActive = card.classList.contains('active');
+                allCards.forEach(c => c.classList.remove('active'));
+                if (!wasActive) {
+                    card.classList.add('active');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateScheduleView('senin');
+        });
+    </script>
+
+</body>
+</html>
