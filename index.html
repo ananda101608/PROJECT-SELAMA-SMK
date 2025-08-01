@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Pelajaran</title>
     <style>
-
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
 
         :root {
@@ -56,9 +55,55 @@
         }
         
         .controls {
-            padding: 15px 10px;
+            padding: 20px;
             border-bottom: 1px solid #e0e0e0;
         }
+
+        .class-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: slideDownFadeIn 0.8s ease-out 0.3s forwards;
+        }
+
+        .wali-kelas-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .wali-kelas-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--biru-cerah);
+        }
+
+        .wali-kelas-details .wali-kelas-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--teks);
+        }
+
+        .wali-kelas-details .wali-kelas-title {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+
+        .class-photo {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
 
         .day-filter {
             display: flex;
@@ -107,9 +152,7 @@
             padding: 25px;
         }
         
-        .schedule-day {
-            display: none;
-        }
+        .schedule-day { display: none; }
         .schedule-day.active {
             display: grid;
             gap: 15px;
@@ -192,6 +235,17 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes slideDownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -202,6 +256,17 @@
         </header>
 
         <div class="controls">
+            <div class="class-info-container">
+                <div class="wali-kelas-card">
+                    <img src="https://placehold.co/100x100/1abc9c/ffffff?text=E" alt="Foto Wali Kelas Bu Entin">
+                    <div class="wali-kelas-details">
+                        <div class="wali-kelas-name">Bu Entin</div>
+                        <div class="wali-kelas-title">Wali Kelas</div>
+                    </div>
+                </div>
+                <img class="class-photo" src="https://placehold.co/600x300/ecf0f1/34495e?text=Foto+Kelas+X+RPL-2" alt="Foto Kelas X RPL-2">
+            </div>
+            
             <div class="day-filter">
                 <button class="day-btn" data-day="senin">Senin</button>
                 <button class="day-btn" data-day="selasa">Selasa</button>
@@ -264,11 +329,10 @@
             'Kurnia': { name: 'Bu Kurnia', img: 'https://placehold.co/100x100/9b59b6/ffffff?text=K' },
             'Linda': { name: 'Bu Linda', img: 'https://placehold.co/100x100/e67e22/ffffff?text=L' },
             'Entin': { name: 'Bu Entin', img: 'https://placehold.co/100x100/1abc9c/ffffff?text=E' },
-            'Batalyon': { name: 'Pak Sugeng', img: 'https://placehold.co/100x100/c0392b/ffffff?text=B' },
+            'Batalyon': { name: 'Pak Sugeng', img: 'https://placehold.co/100x100/c0392b/ffffff?text=S' },
             'Krisna': { name: 'Bpk. Krisna', img: 'https://placehold.co/100x100/34495e/ffffff?text=K' }
         };
 
-        
         const greetings = {
             senin: "Yuk bisa yuk, baru hari pertama! 💪",
             selasa: "Seruu, nanti olahraga! ⚽",
@@ -282,8 +346,10 @@
             schedules.forEach(schedule => schedule.classList.toggle('active', schedule.id === day));
             
             const activeSchedule = document.getElementById(day);
-            const subjectCount = activeSchedule.children.length;
-            infoDisplay.innerHTML = `${greetings[day]} Kamu punya <strong>${subjectCount}</strong> sesi belajar hari ini.`;
+            if(activeSchedule) {
+                const subjectCount = activeSchedule.children.length;
+                infoDisplay.innerHTML = `${greetings[day]} Kamu punya <strong>${subjectCount}</strong> sesi belajar hari ini.`;
+            }
         }
 
         dayButtons.forEach(button => {
@@ -314,8 +380,18 @@
             });
         });
 
+        // **DIPERBARUI**: Otomatis menampilkan jadwal sesuai hari ini
         document.addEventListener('DOMContentLoaded', () => {
-            updateScheduleView('senin');
+            const dayIndex = new Date().getDay(); // 0=Minggu, 1=Senin, ..., 6=Sabtu
+            const daysMap = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+            let today = daysMap[dayIndex];
+
+            // Jika hari ini Sabtu atau Minggu, tampilkan jadwal Senin
+            if (today === 'sabtu' || today === 'minggu') {
+                today = 'senin';
+            }
+            
+            updateScheduleView(today);
         });
     </script>
 
