@@ -380,13 +380,13 @@
             });
         });
 
-        // **DIPERBARUI**: Otomatis menampilkan jadwal sesuai hari ini
+        
         document.addEventListener('DOMContentLoaded', () => {
-            const dayIndex = new Date().getDay(); // 0=Minggu, 1=Senin, ..., 6=Sabtu
+            const dayIndex = new Date().getDay(); 
             const daysMap = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
             let today = daysMap[dayIndex];
 
-            // Jika hari ini Sabtu atau Minggu, tampilkan jadwal Senin
+             
             if (today === 'sabtu' || today === 'minggu') {
                 today = 'senin';
             }
