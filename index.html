@@ -3,274 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Pelajaran & Tugas</title>
+    <title>Jadwal & Biodata Kelas X RPL-2</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-
-        :root {
-            --biru-cerah: #3498db;
-            --kuning-cerah: #f1c40f;
-            --merah-cerah: #e74c3c;
-            --putih: #ffffff;
-            --hitam: #2c3e50;
-            --latar-belakang: #ecf0f1;
-            --teks: #34495e;
-            --teks-abu: #7f8c8d;
-            --transisi-cepat: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--latar-belakang);
-            color: var(--teks);
-        }
-
-        .container-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .schedule-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--putih);
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(52, 73, 94, 0.15);
-            overflow: hidden;
-        }
-
-        header { background-color: var(--biru-cerah); padding: 25px; text-align: center; }
-        header h1 { font-size: 2.5rem; color: var(--putih); font-weight: 800; }
-        
-        .controls { padding: 20px; border-bottom: 1px solid #e0e0e0; }
-        .class-info-container { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 20px; opacity: 0; animation: slideDownFadeIn 0.8s ease-out 0.3s forwards; }
-        .wali-kelas-card { display: flex; align-items: center; gap: 20px; background-color: #f8f9fa; padding: 15px; border-radius: 15px; border: 1px solid #e0e0e0; }
-        .wali-kelas-card img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--biru-cerah); }
-        .wali-kelas-details .wali-kelas-name { font-size: 1.5rem; font-weight: 800; color: var(--teks); }
-        .wali-kelas-details .wali-kelas-title { font-size: 1rem; color: var(--teks-abu); }
-        .class-photo { width: 100%; max-width: 500px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .day-filter { display: flex; justify-content: center; flex-wrap: wrap; }
-        .day-btn { background-color: var(--putih); border: 2px solid var(--biru-cerah); color: var(--biru-cerah); padding: 10px 20px; margin: 5px; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 700; transition: var(--transisi-cepat); }
-        .day-btn:hover { background-color: var(--kuning-cerah); color: var(--teks); border-color: var(--kuning-cerah); transform: translateY(-3px); }
-        .day-btn.active { background-color: var(--biru-cerah); color: var(--putih); box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4); }
-        .info-display { text-align: center; padding: 15px 10px 5px 10px; font-size: 1.1rem; color: var(--teks); font-weight: 700; }
-        .info-display strong { color: var(--biru-cerah); }
-
-        .schedule-content { padding: 25px; }
-        .schedule-day { display: none; }
-        .schedule-day.active { display: grid; gap: 15px; animation: slideUp 0.5s ease-out; }
-        
-        .subject-card { background-color: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid var(--kuning-cerah); will-change: transform; display: grid; grid-template-rows: auto 0fr; transition: grid-template-rows 0.4s ease-out; }
-        .subject-card.active { grid-template-rows: auto 1fr; }
-        .subject-card:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-
-        .subject-details { cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .subject-details .subject-name { font-size: 1.2rem; font-weight: 700; }
-        .subject-details .subject-time { font-size: 1rem; background-color: var(--biru-cerah); padding: 5px 15px; border-radius: 20px; color: var(--putih); flex-shrink: 0; }
-        
-        .card-extra-content { overflow: hidden; opacity: 0; transition: opacity 0.3s ease-out 0.1s; }
-        .subject-card.active .card-extra-content { opacity: 1; padding-top: 15px; }
-
-        .teacher-info { display: flex; align-items: center; gap: 15px; padding-bottom: 15px; border-bottom: 1px solid #e0e0e0; }
-        .teacher-info img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background-color: var(--latar-belakang); }
-        .teacher-info .teacher-name { font-size: 1.1rem; font-weight: 700; }
-
-        .subject-task-area { margin-top: 15px; background-color: #fdfdfd; border-radius: 8px; padding: 15px; }
-        .subject-task-area h3 { margin-bottom: 15px; font-size: 1.2rem; text-align: center; }
-        .task-list-inner { list-style: none; padding: 0; margin-bottom: 15px; }
-        .task-item-inner { background-color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; overflow: hidden; }
-        .task-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .task-title { font-weight: 600; color: var(--biru-cerah); flex-grow: 1; }
-        .task-duedate { font-size: 0.8rem; font-weight: 600; color: var(--teks-abu); margin-top: 4px; }
-        
-        .task-description { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s ease-in-out; font-size: 0.9rem; color: var(--teks-abu); padding-left: 5px; border-left: 3px solid var(--latar-belakang); margin-left: 2px; }
-        .task-item-inner.expanded .task-description { max-height: 100px; opacity: 1; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #eee; }
-        
-        .add-task-form { display: flex; flex-direction: column; gap: 8px; }
-        .add-task-form input, .add-task-form textarea, .add-task-form select { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.9rem; font-family: 'Nunito', sans-serif; transition: all 0.2s; }
-        .add-task-form textarea { min-height: 50px; resize: vertical; }
-        .add-task-form input:focus, .add-task-form textarea:focus, .add-task-form select:focus { outline: none; border-color: var(--biru-cerah); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
-        .add-task-btn { background-color: var(--biru-cerah); color: var(--putih); border: none; padding: 10px 15px; border-radius: 6px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background-color 0.2s; }
-        .add-task-btn:hover { background-color: #2980b9; }
-
-        #global-add-task-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
-            background-color: var(--biru-cerah);
-            color: var(--putih);
-            border: 3px solid transparent;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            animation: rgb-glow 4s linear infinite;
-        }
-        @keyframes rgb-glow {
-            0%   { border-color: var(--merah-cerah); } 17%  { border-color: var(--kuning-cerah); } 34%  { border-color: var(--putih); } 51%  { border-color: var(--biru-cerah); } 68%  { border-color: var(--hitam); } 85%  { border-color: var(--kuning-cerah); } 100% { border-color: var(--merah-cerah); }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-        .close-btn { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .modal-content h2 { margin-bottom: 20px; text-align: center; }
-        
-        .modal-task-list-container { margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; }
-        .modal-task-list-container h3 { font-size: 1.1rem; margin-bottom: 10px; text-align: center; color: var(--teks-abu); }
-        #modal-task-list { list-style: none; padding: 0; max-height: 200px; overflow-y: auto; }
-        .modal-task-item { background-color: #f9f9f9; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .modal-task-item span { font-size: 0.9rem; flex-grow: 1; }
-        .modal-delete-btn { background-color: var(--merah-cerah); color: var(--putih); border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: background-color 0.2s; }
-        .modal-delete-btn:hover { background-color: #c0392b; }
-
-        footer { text-align: center; padding: 20px; font-size: 0.9rem; color: var(--teks-abu); background-color: #f8f9fa; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDownFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root{--biru-cerah:#3498db;--kuning-cerah:#f1c40f;--merah-cerah:#e74c3c;--putih:#ffffff;--hitam:#2c3e50;--latar-belakang:#ecf0f1;--teks:#34495e;--teks-abu:#7f8c8d;--transisi-cepat:all .3s cubic-bezier(.25,.8,.25,1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Nunito',sans-serif;background-color:var(--latar-belakang);color:var(--teks)}
+        .container-wrapper{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px}
+        .schedule-container{width:100%;max-width:800px;background-color:var(--putih);border-radius:20px;box-shadow:0 8px 30px rgba(52,73,94,.15);overflow:hidden}
+        header{background-color:var(--biru-cerah);padding:25px;text-align:center}
+        header h1{font-size:2.5rem;color:var(--putih);font-weight:800}
+        .controls{padding:20px;border-bottom:1px solid #e0e0e0}
+        .view-filter{display:flex;justify-content:center;flex-wrap:wrap;margin-bottom:15px}
+        .view-btn{background-color:var(--putih);border:2px solid var(--biru-cerah);color:var(--biru-cerah);padding:10px 20px;margin:5px;border-radius:50px;cursor:pointer;font-size:1rem;font-weight:700;transition:var(--transisi-cepat)}
+        .view-btn:hover{background-color:var(--kuning-cerah);color:var(--teks);border-color:var(--kuning-cerah)}
+        .view-btn.active{background-color:var(--biru-cerah);color:var(--putih);box-shadow:0 4px 10px rgba(52,152,219,.4)}
+        #jadwal-controls{display:block}
+        .class-info-container{display:flex;flex-direction:column;align-items:center;gap:20px;margin-bottom:20px;opacity:0;animation:slideDownFadeIn .8s ease-out .3s forwards}
+        .wali-kelas-card{display:flex;align-items:center;gap:20px;background-color:#f8f9fa;padding:15px;border-radius:15px;border:1px solid #e0e0e0}
+        .wali-kelas-card img{width:80px;height:80px;border-radius:50%;border:3px solid var(--biru-cerah);object-fit:cover}
+        .wali-kelas-details .wali-kelas-name{font-size:1.5rem;font-weight:800;color:var(--teks)}
+        .wali-kelas-details .wali-kelas-title{font-size:1rem;color:var(--teks-abu)}
+        .class-photo{width:100%;max-width:500px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1)}
+        .day-filter{display:flex;justify-content:center;flex-wrap:wrap}
+        .day-btn{background-color:var(--putih);border:2px solid var(--biru-cerah);color:var(--biru-cerah);padding:10px 20px;margin:5px;border-radius:50px;cursor:pointer;font-size:.9rem;font-weight:700;transition:var(--transisi-cepat)}
+        .day-btn:hover{background-color:var(--kuning-cerah);color:var(--teks);border-color:var(--kuning-cerah);transform:translateY(-3px)}
+        .day-btn.active{background-color:var(--biru-cerah);color:var(--putih);box-shadow:0 4px 10px rgba(52,152,219,.4)}
+        .info-display{text-align:center;padding-top:15px;font-size:1.1rem;color:var(--teks);font-weight:700}
+        .info-display strong{color:var(--biru-cerah)}
+        .page-content{display:none;animation:slideUp .5s ease-out}
+        .page-content.active{display:block}
+        .schedule-day{padding:25px;display:none;grid-template-columns:1fr;gap:15px}
+        .schedule-day.active{display:grid}
+        .subject-card{background-color:#f8f9fa;padding:20px;border-radius:10px;border-left:5px solid var(--kuning-cerah);will-change:transform;display:grid;grid-template-rows:auto 0fr;transition:grid-template-rows .4s ease-out}
+        .subject-card.active{grid-template-rows:auto 1fr}
+        .subject-details{cursor:pointer;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .subject-details .subject-name{font-size:1.2rem;font-weight:700}
+        .subject-details .subject-time{font-size:1rem;background-color:var(--biru-cerah);padding:5px 15px;border-radius:20px;color:var(--putih);flex-shrink:0}
+        .card-extra-content{overflow:hidden;opacity:0;transition:opacity .3s ease-out .1s}
+        .subject-card.active .card-extra-content{opacity:1;padding-top:15px}
+        .teacher-info{display:flex;align-items:center;gap:15px;padding-bottom:15px;border-bottom:1px solid #e0e0e0}
+        .teacher-info img{width:50px;height:50px;border-radius:50%;object-fit:cover}
+        .teacher-info .teacher-name{font-size:1.1rem;font-weight:700}
+        .subject-task-area{margin-top:15px;background-color:#fdfdfd;border-radius:8px;padding:15px}
+        .subject-task-area h3{margin-bottom:15px;font-size:1.2rem;text-align:center}
+        .task-list-inner{list-style:none;padding:0}
+        .task-item-inner{background-color:#fff;padding:12px;border-radius:8px;margin-bottom:10px;border:1px solid #eee;overflow:hidden}
+        .task-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+        .task-title{font-weight:600;color:var(--biru-cerah);flex-grow:1}
+        .task-duedate{font-size:.8rem;font-weight:600;color:var(--teks-abu);margin-top:4px}
+        .task-description{max-height:0;overflow:hidden;opacity:0;transition:all .4s ease-in-out;font-size:.9rem;color:var(--teks-abu);padding-left:5px;border-left:3px solid var(--latar-belakang);margin-left:2px}
+        .task-item-inner.expanded .task-description{max-height:100px;opacity:1;margin-top:8px;padding-top:8px;border-top:1px dashed #eee}
+        #biodata{padding:25px}
+        #biodata h2{text-align:center;font-size:2rem;color:var(--biru-cerah);margin-bottom:20px}
+        .vision-mission{background-color:#f8f9fa;border-left:5px solid var(--biru-cerah);padding:20px;border-radius:10px;margin-bottom:30px}
+        .vision-mission h3{font-size:1.5rem;margin-bottom:10px}
+        .vision-mission p{font-size:1rem;line-height:1.6;color:var(--teks-abu)}
+        .student-list{list-style:none;padding:0}
+        .student-item{background-color:#f8f9fa;border-radius:10px;margin-bottom:10px;display:grid;grid-template-rows:auto 0fr;transition:grid-template-rows .4s ease-out}
+        .student-item.active{grid-template-rows:auto 1fr}
+        .student-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;cursor:pointer;font-weight:600}
+        .student-gender{font-size:.9rem;font-weight:700;padding:4px 8px;border-radius:5px;color:var(--putih)}
+        .gender-l{background-color:var(--biru-cerah)}
+        .gender-p{background-color:var(--merah-cerah)}
+        .student-details-content{overflow:hidden;opacity:0;transition:opacity .3s ease-out .1s,padding .4s ease-out;padding:0 20px}
+        .student-item.active .student-details-content{opacity:1;padding:15px 20px;border-top:1px solid #eee}
+        .student-info{display:grid;grid-template-columns:100px 1fr;gap:20px;align-items:center;margin-bottom:15px}
+        .student-info img{width:100px;height:100px;border-radius:50%;object-fit:cover}
+        .student-contact p{margin:5px 0;font-size:.9rem}
+        .student-contact strong{color:var(--teks)}
+        .privacy-disclaimer{font-size:.8rem;color:var(--teks-abu);font-style:italic;margin-bottom:15px;text-align:center;background-color:var(--latar-belakang);padding:8px;border-radius:5px}
+        .student-map iframe{width:100%;height:250px;border:0;border-radius:8px}
+        #global-add-task-btn{position:fixed;bottom:25px;right:25px;width:60px;height:60px;background-color:var(--biru-cerah);color:var(--putih);border:3px solid transparent;border-radius:50%;font-size:1.5rem;display:flex;justify-content:center;align-items:center;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.2);z-index:1000;animation:rgb-glow 4s linear infinite}
+        @keyframes rgb-glow{0%{border-color:var(--merah-cerah)}17%{border-color:var(--kuning-cerah)}34%{border-color:var(--putih)}51%{border-color:var(--biru-cerah)}68%{border-color:var(--hitam)}85%{border-color:var(--kuning-cerah)}100%{border-color:var(--merah-cerah)}}
+        .modal{display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.5);animation:fadeIn .3s}
+        .modal-content{background-color:#fefefe;margin:10% auto;padding:20px;border:1px solid #888;border-radius:10px;width:90%;max-width:500px;position:relative}
+        .close-btn{color:#aaa;position:absolute;top:10px;right:20px;font-size:28px;font-weight:700;cursor:pointer}
+        .modal-content h2{margin-bottom:20px;text-align:center}
+        .modal-task-list-container{margin-top:25px;border-top:1px solid #eee;padding-top:15px}
+        .modal-task-list-container h3{font-size:1.1rem;margin-bottom:10px;text-align:center;color:var(--teks-abu)}
+        #modal-task-list{list-style:none;padding:0;max-height:200px;overflow-y:auto}
+        .modal-task-item{background-color:#f9f9f9;padding:10px;border-radius:6px;margin-bottom:8px;border:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+        .modal-task-item span{font-size:.9rem;flex-grow:1}
+        .modal-delete-btn{background-color:var(--merah-cerah);color:var(--putih);border:none;padding:6px 10px;border-radius:5px;cursor:pointer;font-size:.8rem;font-weight:700;transition:background-color .2s}
+        .modal-delete-btn:hover{background-color:#c0392b}
+        .add-task-form{display:flex;flex-direction:column;gap:8px}
+        .add-task-form input,.add-task-form select,.add-task-form textarea{width:100%;padding:10px 12px;border-radius:6px;border:1px solid #ccc;font-size:.9rem;font-family:'Nunito',sans-serif;transition:all .2s}
+        .add-task-form textarea{min-height:50px;resize:vertical}
+        .add-task-form input:focus,.add-task-form select:focus,.add-task-form textarea:focus{outline:none;border-color:var(--biru-cerah);box-shadow:0 0 0 3px rgba(52,152,219,.2)}
+        .add-task-btn{background-color:var(--biru-cerah);color:var(--putih);border:none;padding:10px 15px;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;transition:background-color .2s}
+        .add-task-btn:hover{background-color:#2980b9}
+        footer{text-align:center;padding:20px;font-size:.9rem;color:var(--teks-abu);background-color:#f8f9fa}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideDownFadeIn{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     </style>
 </head>
 <body>
     <div class="container-wrapper">
         <div class="schedule-container">
-            <header><h1>Jadwal X Rpl-2</h1></header>
+            <header><h1>Jadwal & Biodata X RPL-2</h1></header>
             <div class="controls">
-                <div class="class-info-container"></div>
-                <div class="day-filter"></div>
-                <div class="info-display" id="info-display"></div>
+                <div class="view-filter">
+                    <button class="view-btn active" data-view="jadwal">Jadwal Pelajaran</button>
+                    <button class="view-btn" data-view="biodata">Biodata Kelas</button>
+                </div>
+                <div id="jadwal-controls">
+                    <div class="class-info-container">
+                        <div class="wali-kelas-card">
+                            <img src="ibu entin.jpg" alt="Foto Wali Kelas Bu Entin">
+                            <div class="wali-kelas-details">
+                                <div class="wali-kelas-name">Bu Entin</div>
+                                <div class="wali-kelas-title">Wali Kelas</div>
+                            </div>
+                        </div>
+                        <img class="class-photo" src="kelas x rpl 2.jpg" alt="Foto Kelas X RPL-2">
+                    </div>
+                    <div class="day-filter">
+                        <button class="day-btn" data-day="senin">Senin</button>
+                        <button class="day-btn" data-day="selasa">Selasa</button>
+                        <button class="day-btn" data-day="rabu">Rabu</button>
+                        <button class="day-btn" data-day="kamis">Kamis</button>
+                        <button class="day-btn" data-day="jumat">Jumat</button>
+                    </div>
+                    <div class="info-display"></div>
+                </div>
             </div>
-            <main class="schedule-content"></main>
-            <footer> &copy; 2025 Ananda </footer>
+
+            <main id="jadwal" class="page-content active">
+                <div id="senin" class="schedule-day"></div>
+                <div id="selasa" class="schedule-day"></div>
+                <div id="rabu" class="schedule-day"></div>
+                <div id="kamis" class="schedule-day"></div>
+                <div id="jumat" class="schedule-day"></div>
+            </main>
+
+            <div id="biodata" class="page-content">
+                <h2>Biodata Kelas X RPL-2</h2>
+                <div class="vision-mission">
+                    <h3>Visi</h3>
+                    <p>Menjadi kelas yang unggul dalam prestasi, solid dalam kebersamaan, dan kreatif dalam berkarya, berlandaskan iman dan takwa.</p>
+                    <br>
+                    <h3>Misi</h3>
+                    <p>1. Meningkatkan prestasi akademik dan non-akademik melalui belajar bersama.<br>
+                       2. Membangun rasa kekeluargaan dan solidaritas yang tinggi antar siswa.<br>
+                       3. Mengembangkan kreativitas siswa di bidang teknologi dan seni.</p>
+                </div>
+                <h3>Daftar Siswa</h3>
+                <ol class="student-list"></ol>
+            </div>
+            
+            <footer> © 2025 Ananda </footer>
         </div>
     </div>
-    <button id="global-add-task-btn" title="Tambah/Hapus Tugas">✏️</button>
-    <div id="task-modal" class="modal"></div>
     
+    <button id="global-add-task-btn" title="Tambah/Hapus Tugas">✏️</button>
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2>Tambah/Hapus Tugas</h2>
+            <form id="global-task-form" class="add-task-form">
+                <input type="text" id="modal-task-title" placeholder="Judul Tugas..." required>
+                <textarea id="modal-task-desc" placeholder="Deskripsi lengkap tugas..."></textarea>
+                <select id="modal-task-day" required><option value="" disabled selected>Pilih Hari...</option><option value="senin">Senin</option><option value="selasa">Selasa</option><option value="rabu">Rabu</option><option value="kamis">Kamis</option><option value="jumat">Jumat</option></select>
+                <select id="modal-task-subject" required><option value="" disabled selected>Pilih Mata Pelajaran...</option></select>
+                <input type="date" id="modal-task-duedate" required>
+                <button type="submit" class="add-task-btn">Simpan Tugas Baru</button>
+            </form>
+            <div class="modal-task-list-container">
+                <h3>Hapus Tugas yang Sudah Selesai</h3>
+                <ul id="modal-task-list"></ul>
+            </div>
+        </div>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA APLIKASI LENGKAP ---
+        const studentData = [
+            { name: "ALVARO DANIEST FERSON SITANGGANG", gender: "L", phone: "0812-XXXX-1001", address: "Jl. Cendrawasih No. 1", dob: "10 Januari 2008", hobby: "Bermain Futsal", ambition: "Software Engineer", motto: "Lakukan yang terbaik!", photo: "https://placehold.co/150x150/3498db/ffffff?text=AD", mapUrl: "https://maps.google.com/maps?q=Jalan%20Cendrawasih%201%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "ANANDA RACHMATU OKTASURYA", gender: "L", phone: "0812-XXXX-1002", address: "Jl. Merpati No. 2", dob: "15 Februari 2008", hobby: "Membaca Komik", ambition: "Web Developer", motto: "Terus belajar.", photo: "https://placehold.co/150x150/e74c3c/ffffff?text=AR", mapUrl: "https://maps.google.com/maps?q=Jalan%20Merpati%202%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "ANATASYA PUTRI", gender: "P", phone: "0813-XXXX-1003", address: "Jl. Elang No. 3", dob: "22 Maret 2008", hobby: "Menari", ambition: "UI/UX Designer", motto: "Selalu bersyukur.", photo: "https://placehold.co/150x150/9b59b6/ffffff?text=AP", mapUrl: "https://maps.google.com/maps?q=Jalan%20Elang%203%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "ANISA NABIL ALWAN", gender: "L", phone: "0812-XXXX-1004", address: "Jl. Garuda No. 4", dob: "3 April 2008", hobby: "Gaming", ambition: "Game Developer", motto: "Never give up.", photo: "https://placehold.co/150x150/2ecc71/ffffff?text=AN", mapUrl: "https://maps.google.com/maps?q=Jalan%20Garuda%204%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "BILAL AZKA BAARIQ", gender: "L", phone: "0812-XXXX-1005", address: "Jl. Rajawali No. 5", dob: "10 Mei 2008", hobby: "Menggambar", ambition: "Illustrator", motto: "Kreativitas tanpa batas.", photo: "https://placehold.co/150x150/f1c40f/34495e?text=BA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Rajawali%205%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "BRYANA JONATHAN SAMOSIR", gender: "P", phone: "0813-XXXX-1006", address: "Jl. Kenari No. 6", dob: "1 Juni 2008", hobby: "Menyanyi", ambition: "Penyanyi", motto: "Suara adalah anugerah.", photo: "https://placehold.co/150x150/1abc9c/ffffff?text=BJ", mapUrl: "https://maps.google.com/maps?q=Jalan%20Kenari%206%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "DANIEL DAVIANO MARI DOLLU", gender: "L", phone: "0812-XXXX-1007", address: "Jl. Nuri No. 7", dob: "7 Juli 2008", hobby: "Basket", ambition: "Atlet", motto: "Kerja keras mengalahkan bakat.", photo: "https://placehold.co/150x150/e67e22/ffffff?text=DD", mapUrl: "https://maps.google.com/maps?q=Jalan%20Nuri%207%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "DAVINO REYVEN SETIAWAN", gender: "L", phone: "0812-XXXX-1008", address: "Jl. Pipit No. 8", dob: "18 Agustus 2008", hobby: "Fotografi", ambition: "Fotografer", motto: "Abadikan momen.", photo: "https://placehold.co/150x150/34495e/ffffff?text=DR", mapUrl: "https://maps.google.com/maps?q=Jalan%20Pipit%208%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "EGLANTIN LEGI PANGESTU", gender: "P", phone: "0813-XXXX-1009", address: "Jl. Pelikan No. 9", dob: "25 September 2008", hobby: "Melukis", ambition: "Seniman", motto: "Hidup penuh warna.", photo: "https://placehold.co/150x150/c0392b/ffffff?text=EL", mapUrl: "https://maps.google.com/maps?q=Jalan%20Pelikan%209%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "FAIZ AZZAM ZAKARIA", gender: "L", phone: "0812-XXXX-1010", address: "Jl. Cendana No. 10", dob: "30 Oktober 2008", hobby: "Coding", ambition: "AI Specialist", motto: "Logic is beautiful.", photo: "https://placehold.co/150x150/8e44ad/ffffff?text=FA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Cendana%2010%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "FARRAS NABIL", gender: "L", phone: "0812-XXXX-1011", address: "Jl. Mahoni No. 11", dob: "11 November 2008", hobby: "Badminton", ambition: "Pengusaha", motto: "Muda berkarya.", photo: "https://placehold.co/150x150/27ae60/ffffff?text=FN", mapUrl: "https://maps.google.com/maps?q=Jalan%20Mahoni%2011%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "FIKRI HAIKAL", gender: "L", phone: "0812-XXXX-1012", address: "Jl. Jati No. 12", dob: "12 Desember 2008", hobby: "Sepak Bola", ambition: "Pemain Bola", motto: "Gocekan maut.", photo: "https://placehold.co/150x150/2980b9/ffffff?text=FH", mapUrl: "https://maps.google.com/maps?q=Jalan%20Jati%2012%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "FRIENDLY OBAMA", gender: "L", phone: "0812-XXXX-1013", address: "Jl. Akasia No. 13", dob: "13 Januari 2009", hobby: "Mendengarkan Musik", ambition: "Produser Musik", motto: "Musik adalah hidup.", photo: "https://placehold.co/150x150/d35400/ffffff?text=FO", mapUrl: "https://maps.google.com/maps?q=Jalan%20Akasia%2013%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "GENDIS SAFFANAH TRIDIYANTI", gender: "P", phone: "0813-XXXX-1014", address: "Jl. Anggrek No. 14", dob: "14 Februari 2009", hobby: "Menulis Cerita", ambition: "Penulis Novel", motto: "Imajinasi tak terbatas.", photo: "https://placehold.co/150x150/7f8c8d/ffffff?text=GS", mapUrl: "https://maps.google.com/maps?q=Jalan%20Anggrek%2014%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "IKHSAN JUNDI SANJAYA", gender: "L", phone: "0812-XXXX-1015", address: "Jl. Mawar No. 15", dob: "15 Maret 2009", hobby: "Berenang", ambition: "Arsitek", motto: "Membangun masa depan.", photo: "https://placehold.co/150x150/16a085/ffffff?text=IJ", mapUrl: "https://maps.google.com/maps?q=Jalan%20Mawar%2015%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "ILHAM ROZAN FAUZI", gender: "L", phone: "0812-XXXX-1016", address: "Jl. Melati No. 16", dob: "16 April 2009", hobby: "Naik Gunung", ambition: "Ahli Geologi", motto: "Jelajahi dunia.", photo: "https://placehold.co/150x150/f39c12/ffffff?text=IR", mapUrl: "https://maps.google.com/maps?q=Jalan%20Melati%2016%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "KAREN AURELIA BALAPADANG", gender: "P", phone: "0813-XXXX-1017", address: "Jl. Tulip No. 17", dob: "17 Mei 2009", hobby: "Memasak", ambition: "Chef", motto: "Cinta dari dapur.", photo: "https://placehold.co/150x150/c0392b/ffffff?text=KA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Tulip%2017%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "LAKSAMANA KENZIE FAEΥΖΑ ANDABA", gender: "P", phone: "0813-XXXX-1018", address: "Jl. Dahlia No. 18", dob: "18 Juni 2009", hobby: "Fashion Design", ambition: "Desainer", motto: "Gaya adalah ekspresi.", photo: "https://placehold.co/150x150/8e44ad/ffffff?text=LK", mapUrl: "https://maps.google.com/maps?q=Jalan%20Dahlia%2018%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "MARVEL ADRIAN SAPUTRA DIKA", gender: "L", phone: "0812-XXXX-1019", address: "Jl. Kamboja No. 19", dob: "19 Juli 2009", hobby: "Merakit PC", ambition: "IT Consultant", motto: "Hardware is my passion.", photo: "https://placehold.co/150x150/2980b9/ffffff?text=MA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Kamboja%2019%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "MOHAMMAD RAIS FURQON", gender: "L", phone: "0812-XXXX-1020", address: "Jl. Flamboyan No. 20", dob: "20 Agustus 2009", hobby: "Catur", ambition: "Programmer", motto: "Selalu berpikir 3 langkah ke depan.", photo: "https://placehold.co/150x150/2c3e50/ffffff?text=MR", mapUrl: "https://maps.google.com/maps?q=Jalan%20Flamboyan%2020%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "MOSES KEVIN SAMUEL SIREGAR", gender: "L", phone: "0812-XXXX-1021", address: "Jl. Bougenville No. 21", dob: "21 September 2009", hobby: "Main Gitar", ambition: "Musisi", motto: "Hidup itu rock and roll.", photo: "https://placehold.co/150x150/d35400/ffffff?text=MK", mapUrl: "https://maps.google.com/maps?q=Jalan%20Bougenville%2021%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "MUHAMAD HAFIDZ ALFARIZKI", gender: "L", phone: "0812-XXXX-1022", address: "Jl. Soka No. 22", dob: "22 Oktober 2009", hobby: "Data Science", ambition: "Data Scientist", motto: "Data is the new oil.", photo: "https://placehold.co/150x150/3498db/ffffff?text=MH", mapUrl: "https://maps.google.com/maps?q=Jalan%20Soka%2022%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "MUHAMMAD ZAQRI FARISKI", gender: "L", phone: "0812-XXXX-1023", address: "Jl. Asoka No. 23", dob: "23 November 2009", hobby: "Animasi", ambition: "Animator 3D", motto: "Menghidupkan imajinasi.", photo: "https://placehold.co/150x150/e74c3c/ffffff?text=MZ", mapUrl: "https://maps.google.com/maps?q=Jalan%20Asoka%2023%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "NAILA AURA SYIO", gender: "P", phone: "0813-XXXX-1024", address: "Jl. Kencana No. 24", dob: "24 Desember 2009", hobby: "Membaca Buku", ambition: "Pustakawan", motto: "Buku adalah jendela dunia.", photo: "https://placehold.co/150x150/9b59b6/ffffff?text=NA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Kencana%2024%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "NAOMI SHIZU PUTRI BAFI", gender: "P", phone: "0813-XXXX-1025", address: "Jl. Cempaka No. 25", dob: "25 Januari 2010", hobby: "Berkebun", ambition: "Ahli Botani", motto: "Tumbuh dan berkembang.", photo: "https://placehold.co/150x150/2ecc71/ffffff?text=NS", mapUrl: "https://maps.google.com/maps?q=Jalan%20Cempaka%2025%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "OLTA SUGI PERWIRA", gender: "P", phone: "0813-XXXX-1026", address: "Jl. Edelweis No. 26", dob: "26 Februari 2010", hobby: "Volley", ambition: "Dokter", motto: "Membantu sesama.", photo: "https://placehold.co/150x150/f1c40f/34495e?text=OS", mapUrl: "https://maps.google.com/maps?q=Jalan%20Edelweis%2026%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "QIARA ZHAFIRA PUTRI", gender: "P", phone: "0813-XXXX-1027", address: "Jl. Wijaya Kusuma No. 27", dob: "27 Maret 2010", hobby: "Menonton Film", ambition: "Sutradara", motto: "Cerita dalam gambar.", photo: "https://placehold.co/150x150/1abc9c/ffffff?text=QZ", mapUrl: "https://maps.google.com/maps?q=Jalan%20Wijaya%20Kusuma%2027%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "RAFAEL GERRAD RIZQULLAH", gender: "L", phone: "0812-XXXX-1028", address: "Jl. Pattimura No. 28", dob: "28 April 2010", hobby: "Desain Grafis", ambition: "Graphic Designer", motto: "Desain yang berbicara.", photo: "https://placehold.co/150x150/e67e22/ffffff?text=RG", mapUrl: "https://maps.google.com/maps?q=Jalan%20Pattimura%2028%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "RAIHAN DWI SAPUTRA", gender: "L", phone: "0812-XXXX-1029", address: "Jl. Diponegoro No. 29", dob: "29 Mei 2010", hobby: "Belajar Bahasa Baru", ambition: "Diplomat", motto: "Dunia dalam genggaman.", photo: "https://placehold.co/150x150/34495e/ffffff?text=RD", mapUrl: "https://maps.google.com/maps?q=Jalan%20Diponegoro%2029%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "RAYHANN MAULIDIA DZUHRİ", gender: "P", phone: "0813-XXXX-1030", address: "Jl. Sudirman No. 30", dob: "30 Juni 2010", hobby: "Traveling", ambition: "Pilot", motto: "Langit adalah rumahku.", photo: "https://placehold.co/150x150/c0392b/ffffff?text=RM", mapUrl: "https://maps.google.com/maps?q=Jalan%20Sudirman%2030%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "REYZA ARKA SURYATAMA", gender: "L", phone: "0812-XXXX-1031", address: "Jl. Thamrin No. 31", dob: "31 Juli 2010", hobby: "Fisika", ambition: "Ilmuwan", motto: "Mengungkap rahasia alam semesta.", photo: "https://placehold.co/150x150/8e44ad/ffffff?text=RA", mapUrl: "https://maps.google.com/maps?q=Jalan%20Thamrin%2031%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "RIZKY PUTRA PRASETYO", gender: "L", phone: "0812-XXXX-1032", address: "Jl. Gatot Subroto No. 32", dob: "1 Agustus 2010", hobby: "Vloging", ambition: "Content Creator", motto: "Bagikan ceritamu.", photo: "https://placehold.co/150x150/27ae60/ffffff?text=RP", mapUrl: "https://maps.google.com/maps?q=Jalan%20Gatot%20Subroto%2032%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "SAMUEL PRATAMA AVYUS DJUMARTO", gender: "L", phone: "0812-XXXX-1033", address: "Jl. S. Parman No. 33", dob: "2 September 2010", hobby: "Robotik", ambition: "Robotic Engineer", motto: "Masa depan adalah otomatisasi.", photo: "https://placehold.co/150x150/2980b9/ffffff?text=SP", mapUrl: "https://maps.google.com/maps?q=Jalan%20S.%20Parman%2033%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "SHIFA ARMELIA", gender: "P", phone: "0813-XXXX-1034", address: "Jl. A. Yani No. 34", dob: "3 Oktober 2010", hobby: "Public Speaking", ambition: "Pengacara", motto: "Bicara dengan data.", photo: "https://placehold.co/150x150/d35400/ffffff?text=SA", mapUrl: "https://maps.google.com/maps?q=Jalan%20A.%20Yani%2034%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "TIARA NOVALIA", gender: "P", phone: "0813-XXXX-1035", address: "Jl. M.T. Haryono No. 35", dob: "4 November 2010", hobby: "Debat", ambition: "Politisi", motto: "Suara untuk perubahan.", photo: "https://placehold.co/150x150/7f8c8d/ffffff?text=TN", mapUrl: "https://maps.google.com/maps?q=Jalan%20M.T.%20Haryono%2035%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
+            { name: "ZIANKA GADING PUTRA ISNAINI", gender: "L", phone: "0812-XXXX-1036", address: "Jl. D.I. Panjaitan No. 36", dob: "5 Desember 2010", hobby: "Sejarah", ambition: "Arkeolog", motto: "Belajar dari masa lalu.", photo: "https://placehold.co/150x150/16a085/ffffff?text=ZG", mapUrl: "https://maps.google.com/maps?q=Jalan%20D.I.%20Panjaitan%2036%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" }
+        ];
+        const teachersData = { 'Fajri':{name:'Bu Fajri',img:'https://placehold.co/100x100/3498db/ffffff?text=F'},'Fify':{name:'Bu Fify',img:'https://placehold.co/100x100/f1c40f/34495e?text=F'},'Ceceh':{name:'Pak Ceceh',img:'https://placehold.co/100x100/e74c3c/ffffff?text=C'},'Elvi':{name:'Bu Elvi',img:'https://placehold.co/100x100/2ecc71/ffffff?text=E'},'Kurnia':{name:'Bu Kurnia',img:'https://placehold.co/100x100/9b59b6/ffffff?text=K'},'Linda':{name:'Bu Linda',img:'https://placehold.co/100x100/e67e22/ffffff?text=L'},'Entin':{name:'Bu Entin',img:'ibu entin.jpg'},'Batalyon':{name:'Pak Sugeng',img:'https://placehold.co/100x100/c0392b/ffffff?text=S'},'Krisna':{name:'Bpk. Krisna',img:'https://placehold.co/100x100/34495e?text=K'}};
+        const greetings = { senin:"Yuk bisa yuk, baru hari pertama! 💪",selasa:"Seruu, nanti olahraga! ⚽",rabu:"Semoga ga pramuka... 🤞",kamis:"Aduh, pelajaran susah semua! 🤯",jumat:"Sama kaya Kamis, bedanya BESOK LIBUR! 🎉"};
+        const scheduleData = {
+            senin: [ { teacher: "Kurnia", subject: "Pendidikan Pancasila", time: "07.15 - 08.45" }, { teacher: "Fajri", subject: "Bahasa Indonesia", time: "08.45 - 09.30" }, { teacher: "Ceceh", subject: "Agama", time: "09.45 - 12.00" }, { teacher: "Batalyon", subject: "Informatika", time: "12.45 - 15.00" } ],
+            selasa: [ { teacher: "Fajri", subject: "Bahasa Indonesia", time: "06.30 - 08.45" }, { teacher: "Batalyon", subject: "Informatika", time: "08.45 - 09.30" }, { subject: "PJOK", time: "09.45 - 12.00" }, { subject: "BK", time: "12.45 - 13.30" }, { teacher: "Kurnia", subject: "Bahasa Inggris", time: "13.30 - 15.00" } ],
+            rabu: [ { teacher: "Krisna", subject: "Dasar-Dasar keahlian 1", time: "06.30 - 09.30" }, { teacher: "Fify", subject: "IPAS", time: "09.45 - 12.00" }, { teacher: "Entin", subject: "Dasar-Dasar keahlian 2", time: "12.45 - 15.00" } ],
+            kamis: [ { teacher: "Linda", subject: "Seni Budaya", time: "06.30 - 08.00" }, { teacher: "Kurnia", subject: "Bahasa Inggris", time: "08.00 - 09.30" }, { teacher: "Elvi", subject: "Matematika", time: "09.45 - 11.15" }, { teacher: "Entin", subject: "Dasar-Dasar keahlian 2", time: "11.15 - 12.00" }, { teacher: "Entin", subject: "Dasar-Dasar keahlian 2", time: "12.45 - 15.00" } ],
+            jumat: [ { teacher: "Fify", subject: "IPAS", time: "07.30 - 09.45" }, { teacher: "Fify", subject: "Sejarah", time: "10.00 - 11.30" }, { teacher: "Elvi", subject: "Matematika", time: "12.45 - 14.15" } ],
+        };
+        let allSubjectTasks = JSON.parse(localStorage.getItem('subjectTasks')) || {};
         
-        document.querySelector('.class-info-container').innerHTML = `
-            <div class="wali-kelas-card">
-                <img src="ibu entin.jpg" alt="Foto Wali Kelas Bu Entin">
-                <div class="wali-kelas-details">
-                    <div class="wali-kelas-name">Bu Entin</div>
-                    <div class="wali-kelas-title">Wali Kelas</div>
-                </div>
-            </div>
-            <img class="class-photo" src="https://placehold.co/600x300/ecf0f1/34495e?text=Foto+Kelas+X+RPL-2" alt="Foto Kelas X RPL-2">`;
-        
-        document.querySelector('.day-filter').innerHTML = `
-            <button class="day-btn" data-day="senin">Senin</button>
-            <button class="day-btn" data-day="selasa">Selasa</button>
-            <button class="day-btn" data-day="rabu">Rabu</button>
-            <button class="day-btn" data-day="kamis">Kamis</button>
-            <button class="day-btn" data-day="jumat">Jumat</button>`;
-
-        document.querySelector('.schedule-content').innerHTML = `
-            <div id="senin" class="schedule-day">
-                <div class="subject-card" data-teacher="Kurnia" data-subject="Pendidikan Pancasila"><div class="subject-details"><span class="subject-name">Pendidikan Pancasila</span><span class="subject-time">07.15 - 08.45</span></div></div>
-                <div class="subject-card" data-teacher="Fajri" data-subject="Bahasa Indonesia"><div class="subject-details"><span class="subject-name">Bahasa Indonesia</span><span class="subject-time">08.45 - 09.30</span></div></div>
-                <div class="subject-card" data-teacher="Ceceh" data-subject="Agama"><div class="subject-details"><span class="subject-name">Agama</span><span class="subject-time">09.45 - 12.00</span></div></div>
-                <div class="subject-card" data-teacher="Batalyon" data-subject="Informatika"><div class="subject-details"><span class="subject-name">Informatika</span><span class="subject-time">12.45 - 15.00</span></div></div>
-            </div>
-            <div id="selasa" class="schedule-day">
-                <div class="subject-card" data-teacher="Fajri" data-subject="Bahasa Indonesia"><div class="subject-details"><span class="subject-name">Bahasa Indonesia</span><span class="subject-time">06.30 - 08.45</span></div></div>
-                <div class="subject-card" data-teacher="Batalyon" data-subject="Informatika"><div class="subject-details"><span class="subject-name">Informatika</span><span class="subject-time">08.45 - 09.30</span></div></div>
-                <div class="subject-card" data-subject="PJOK"><div class="subject-details"><span class="subject-name">PJOK</span><span class="subject-time">09.45 - 12.00</span></div></div>
-                <div class="subject-card" data-subject="BK"><div class="subject-details"><span class="subject-name">BK</span><span class="subject-time">12.45 - 13.30</span></div></div>
-                <div class="subject-card" data-teacher="Kurnia" data-subject="Bahasa Inggris"><div class="subject-details"><span class="subject-name">Bahasa Inggris</span><span class="subject-time">13.30 - 15.00</span></div></div>
-            </div>
-            <div id="rabu" class="schedule-day">
-                <div class="subject-card" data-teacher="Krisna" data-subject="Dasar-Dasar keahlian 1"><div class="subject-details"><span class="subject-name">Dasar-Dasar keahlian 1</span><span class="subject-time">06.30 - 09.30</span></div></div>
-                <div class="subject-card" data-teacher="Fify" data-subject="IPAS"><div class="subject-details"><span class="subject-name">IPAS</span><span class="subject-time">09.45 - 12.00</span></div></div>
-                <div class="subject-card" data-teacher="Entin" data-subject="Dasar-Dasar keahlian 2"><div class="subject-details"><span class="subject-name">Dasar-Dasar keahlian 2</span><span class="subject-time">12.45 - 15.00</span></div></div>
-            </div>
-            <div id="kamis" class="schedule-day">
-                <div class="subject-card" data-teacher="Linda" data-subject="Seni Budaya"><div class="subject-details"><span class="subject-name">Seni Budaya</span><span class="subject-time">06.30 - 08.00</span></div></div>
-                <div class="subject-card" data-teacher="Kurnia" data-subject="Bahasa Inggris"><div class="subject-details"><span class="subject-name">Bahasa Inggris</span><span class="subject-time">08.00 - 09.30</span></div></div>
-                <div class="subject-card" data-teacher="Elvi" data-subject="Matematika"><div class="subject-details"><span class="subject-name">Matematika</span><span class="subject-time">09.45 - 11.15</span></div></div>
-                <div class="subject-card" data-teacher="Entin" data-subject="Dasar-Dasar keahlian 2"><div class="subject-details"><span class="subject-name">Dasar-Dasar keahlian 2</span><span class="subject-time">11.15 - 12.00</span></div></div>
-                <div class="subject-card" data-teacher="Entin" data-subject="Dasar-Dasar keahlian 2"><div class="subject-details"><span class="subject-name">Dasar-Dasar keahlian 2</span><span class="subject-time">12.45 - 15.00</span></div></div>
-            </div>
-            <div id="jumat" class="schedule-day">
-                <div class="subject-card" data-teacher="Fify" data-subject="IPAS"><div class="subject-details"><span class="subject-name">IPAS</span><span class="subject-time">07.30 - 09.45</span></div></div>
-                <div class="subject-card" data-teacher="Fify" data-subject="Sejarah"><div class="subject-details"><span class="subject-name">Sejarah</span><span class="subject-time">10.00 - 11.30</span></div></div>
-                <div class="subject-card" data-teacher="Elvi" data-subject="Matematika"><div class="subject-details"><span class="subject-name">Matematika</span><span class="subject-time">12.45 - 14.15</span></div></div>
-            </div>`;
-        
-        document.getElementById('task-modal').innerHTML = `
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Tambah/Hapus Tugas</h2>
-                <form id="global-task-form" class="add-task-form">
-                    <input type="text" id="modal-task-title" placeholder="Judul Tugas..." required>
-                    <textarea id="modal-task-desc" placeholder="Deskripsi lengkap tugas..."></textarea>
-                    <select id="modal-task-day" required><option value="" disabled selected>Pilih Hari...</option><option value="senin">Senin</option><option value="selasa">Selasa</option><option value="rabu">Rabu</option><option value="kamis">Kamis</option><option value="jumat">Jumat</option></select>
-                    <select id="modal-task-subject" required><option value="" disabled selected>Pilih Mata Pelajaran...</option></select>
-                    <input type="date" id="modal-task-duedate" required>
-                    <button type="submit" class="add-task-btn">Simpan Tugas Baru</button>
-                </form>
-                <div class="modal-task-list-container">
-                    <h3>Hapus Tugas yang Sudah Selesai</h3>
-                    <ul id="modal-task-list"></ul>
-                </div>
-            </div>`;
-
-
+        const viewButtons = document.querySelectorAll('.view-btn');
+        const allPages = document.querySelectorAll('.page-content');
+        const studentListContainer = document.querySelector('.student-list');
+        const jadwalContainer = document.getElementById('jadwal');
+        const jadwalControls = document.getElementById('jadwal-controls');
         const dayButtons = document.querySelectorAll('.day-btn');
-        const schedules = document.querySelectorAll('.schedule-day');
-        const infoDisplay = document.getElementById('info-display');
-        const allCards = document.querySelectorAll('.subject-card');
-        const scheduleContent = document.querySelector('.schedule-content');
+        const infoDisplay = document.querySelector('.info-display');
         const modal = document.getElementById('task-modal');
         const globalAddTaskBtn = document.getElementById('global-add-task-btn');
         const closeModalBtn = document.querySelector('.modal .close-btn');
         const globalTaskForm = document.getElementById('global-task-form');
         const modalTaskList = document.getElementById('modal-task-list');
 
-        const teachersData = { 'Fajri':{name:'Bu Fajri',img:'https://placehold.co/100x100/3498db/ffffff?text=F'},'Fify':{name:'Bu Fify',img:'https://placehold.co/100x100/f1c40f/34495e?text=F'},'Ceceh':{name:'Pak Ceceh',img:'https://placehold.co/100x100/e74c3c/ffffff?text=C'},'Elvi':{name:'Bu Elvi',img:'https://placehold.co/100x100/2ecc71/ffffff?text=E'},'Kurnia':{name:'Bu Kurnia',img:'https://placehold.co/100x100/9b59b6/ffffff?text=K'},'Linda':{name:'Bu Linda',img:'https://placehold.co/100x100/e67e22/ffffff?text=L'},'Entin':{name:'Bu Entin',img:'ibu entin.jpg'},'Batalyon':{name:'Pak Sugeng',img:'https://placehold.co/100x100/c0392b/ffffff?text=S'},'Krisna':{name:'Bpk. Krisna',img:'https://placehold.co/100x100/34495e/ffffff?text=K'}};
-        const greetings = { senin:"Yuk bisa yuk, baru hari pertama! 💪",selasa:"Seruu, nanti olahraga! ⚽",rabu:"Semoga ga pramuka... 🤞",kamis:"Aduh, pelajaran susah semua! 🤯",jumat:"Sama kaya Kamis, bedanya BESOK LIBUR! 🎉"};
-        
-        let allSubjectTasks = JSON.parse(localStorage.getItem('subjectTasks')) || {};
         const saveTasks = () => localStorage.setItem('subjectTasks', JSON.stringify(allSubjectTasks));
         
-        function updateScheduleView(day) {
+        function migrateOldTasks() {
+            let dataWasChanged = false;
+            Object.keys(allSubjectTasks).forEach(key => {
+                if (Array.isArray(allSubjectTasks[key]) && allSubjectTasks[key].length > 0 && typeof allSubjectTasks[key][0] === 'string') {
+                    dataWasChanged = true;
+                    allSubjectTasks[key] = allSubjectTasks[key].map(taskTitle => ({ title: taskTitle, description: '', dueDate: '' }));
+                }
+                allSubjectTasks[key].forEach(task => {
+                    if (task.dueDate === undefined) {
+                        dataWasChanged = true;
+                        task.dueDate = '';
+                    }
+                });
+            });
+            if (dataWasChanged) saveTasks();
+        }
+
+        function switchView(viewId) {
+            allPages.forEach(page => page.classList.remove('active'));
+            document.getElementById(viewId)?.classList.add('active');
+            viewButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewId));
+            
+            const isJadwal = viewId === 'jadwal';
+            jadwalControls.style.display = isJadwal ? 'block' : 'none';
+            globalAddTaskBtn.style.display = isJadwal ? 'flex' : 'none';
+            if (isJadwal) {
+                const activeDayButton = document.querySelector('.day-btn.active');
+                updateDayView(activeDayButton ? activeDayButton.dataset.day : 'senin');
+            }
+        }
+
+        function updateDayView(day) {
             dayButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.day === day));
-            schedules.forEach(schedule => schedule.classList.toggle('active', schedule.id === day));
-            const activeSchedule = document.getElementById(day);
-            if(activeSchedule) {
-                const subjectCount = activeSchedule.querySelectorAll('.subject-card').length;
-                infoDisplay.innerHTML = `${greetings[day]} Kamu punya <strong>${subjectCount}</strong> sesi belajar hari ini.`;
+            document.querySelectorAll('.schedule-day').forEach(d => d.classList.remove('active'));
+            const dayEl = document.getElementById(day);
+            if (dayEl) {
+                dayEl.classList.add('active');
+                infoDisplay.innerHTML = `Kamu sedang melihat jadwal hari <strong>${day.charAt(0).toUpperCase() + day.slice(1)}</strong>.`;
             }
         }
         
@@ -278,23 +289,17 @@
             const taskKey = card.dataset.taskKey;
             const taskListUl = card.querySelector('.task-list-inner');
             if (!taskListUl) return;
-
             taskListUl.innerHTML = '';
             const tasks = allSubjectTasks[taskKey] || [];
-            
             if (tasks.length === 0) {
                 taskListUl.innerHTML = '<li class="task-item-inner" style="border:none; padding-left:0;"><i>Belum ada tugas.</i></li>';
                 return;
             }
-
-            tasks.forEach((task, index) => {
+            tasks.forEach((task) => {
                 const li = document.createElement('li');
                 li.className = 'task-item-inner';
                 const dueDateHTML = task.dueDate ? `<div class="task-duedate">Kumpul: ${new Date(task.dueDate+'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>` : '';
-                li.innerHTML = `
-                    <div class="task-header"><span class="task-title">${task.title}</span></div>
-                    <div class="task-description">${task.description || '<i>Tidak ada deskripsi.</i>'}</div>
-                    ${dueDateHTML}`;
+                li.innerHTML = `<div class="task-header"><span class="task-title">${task.title}</span></div><div class="task-description">${task.description || '<i>Tidak ada deskripsi.</i>'}</div>${dueDateHTML}`;
                 taskListUl.appendChild(li);
             });
         }
@@ -304,58 +309,100 @@
             const allTasksFlat = Object.entries(allSubjectTasks).flatMap(([taskKey, tasks]) => 
                 tasks.map((task, index) => ({ ...task, taskKey, index }))
             );
-
             if (allTasksFlat.length === 0) {
                 modalTaskList.innerHTML = '<li><i>Tidak ada tugas yang terdaftar.</i></li>';
                 return;
             }
-
             allTasksFlat.forEach(taskData => {
                 const [day, ...subjectParts] = taskData.taskKey.split('-');
                 const subject = subjectParts.join(' ');
                 const li = document.createElement('li');
                 li.className = 'modal-task-item';
                 li.innerHTML = `<span><b>${taskData.title}</b> (${subject}, ${day})</span>`;
-                
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'modal-delete-btn';
                 deleteBtn.textContent = '🗑️ Hapus';
                 deleteBtn.dataset.taskKey = taskData.taskKey;
                 deleteBtn.dataset.index = taskData.index;
                 li.appendChild(deleteBtn);
-
                 modalTaskList.appendChild(li);
             });
         }
         
-        allCards.forEach(card => {
-            const day = card.closest('.schedule-day').id;
-            const subject = card.dataset.subject || card.querySelector('.subject-name').textContent;
-            const taskKey = `${day}-${subject.replace(/\s+/g, '-')}`;
-            card.dataset.taskKey = taskKey;
-
-            const extraContent = document.createElement('div');
-            extraContent.className = 'card-extra-content';
-            
-            const teacherKey = card.dataset.teacher;
-            if (teacherKey && teachersData[teacherKey]) {
-                extraContent.innerHTML += `<div class="teacher-info"><img src="${teachersData[teacherKey].img}" alt="Foto ${teachersData[teacherKey].name}"><span class="teacher-name">${teachersData[teacherKey].name}</span></div>`;
-            }
-            extraContent.innerHTML += `
-                <div class="subject-task-area">
-                    <h3>Tugas Mapel</h3>
-                    <ul class="task-list-inner"></ul>
-                </div>`;
-            card.appendChild(extraContent);
+        // --- INISIALISASI APLIKASI ---
+        
+        migrateOldTasks();
+        
+        Object.keys(scheduleData).forEach(day => {
+            const dayDiv = document.getElementById(day);
+            scheduleData[day].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.dataset.subject = item.subject;
+                if(item.teacher) card.dataset.teacher = item.teacher;
+                const taskKey = `${day}-${item.subject.replace(/\s+/g, '-')}`;
+                card.dataset.taskKey = taskKey;
+                card.innerHTML = `<div class="subject-details"><span class="subject-name">${item.subject}</span><span class="subject-time">${item.time}</span></div>`;
+                const extraContent = document.createElement('div');
+                extraContent.className = 'card-extra-content';
+                if (item.teacher && teachersData[item.teacher]) {
+                    extraContent.innerHTML += `<div class="teacher-info"><img src="${teachersData[item.teacher].img}" alt="Foto ${teachersData[item.teacher].name}"><span class="teacher-name">${teachersData[item.teacher].name}</span></div>`;
+                }
+                extraContent.innerHTML += `<div class="subject-task-area"><h3>Tugas Mapel</h3><ul class="task-list-inner"></ul></div>`;
+                card.appendChild(extraContent);
+                dayDiv.appendChild(card);
+            });
         });
 
-        scheduleContent.addEventListener('click', function(event) {
-            const target = event.target;
-            const header = target.closest('.subject-details');
-            const taskTitle = target.closest('.task-title');
+        studentData.forEach((student, index) => {
+            const studentItem = document.createElement('li');
+            studentItem.className = 'student-item';
+            studentItem.innerHTML = `
+                <div class="student-header">
+                    <span>${index + 1}. ${student.name}</span>
+                    <span class="student-gender gender-${student.gender.toLowerCase()}">${student.gender}</span>
+                </div>
+                <div class="student-details-content">
+                    <p class="privacy-disclaimer"><b>Disclaimer:</b> Data di bawah ini adalah contoh, bukan data asli.</p>
+                    <div class="student-info">
+                        <img src="${student.photo}" alt="Foto ${student.name}">
+                        <div class="student-contact">
+                            <p><strong>Tanggal Lahir:</strong> ${student.dob}</p>
+                            <p><strong>Nomor HP:</strong> ${student.phone}</p>
+                            <p><strong>Alamat:</strong> ${student.address}, Jakarta</p>
+                            <p><strong>Hobi:</strong> ${student.hobby}</p>
+                            <p><strong>Cita-cita:</strong> ${student.ambition}</p>
+                            <p><strong>Motto:</strong> "${student.motto}"</p>
+                        </div>
+                    </div>
+                    <div class="student-map"><iframe src="${student.mapUrl}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                </div>`;
+            studentListContainer.appendChild(studentItem);
+        });
 
+        const allCards = document.querySelectorAll('.subject-card');
+        const subjectSelect = document.getElementById('modal-task-subject');
+        const uniqueSubjects = [...new Set([...allCards].map(card => card.dataset.subject))];
+        uniqueSubjects.forEach(subject => { if (subject) { const option = document.createElement('option'); option.value = subject.replace(/\s+/g, '-'); option.textContent = subject; subjectSelect.appendChild(option); } });
+
+        viewButtons.forEach(button => button.addEventListener('click', () => switchView(button.dataset.view)));
+        dayButtons.forEach(button => button.addEventListener('click', () => { allCards.forEach(c => c.classList.remove('active')); updateDayView(button.dataset.day); }));
+        studentListContainer.addEventListener('click', function(event) {
+            const header = event.target.closest('.student-header');
             if (header) {
-                const cardToToggle = header.closest('.subject-card');
+                const itemToToggle = header.parentElement;
+                const wasActive = itemToToggle.classList.contains('active');
+                studentListContainer.querySelectorAll('.student-item').forEach(item => item.classList.remove('active'));
+                if (!wasActive) itemToToggle.classList.add('active');
+            }
+        });
+
+        jadwalContainer.addEventListener('click', function(event) {
+            const target = event.target;
+            const detailsHeader = target.closest('.subject-details');
+            const taskHeader = target.closest('.task-header');
+            if (detailsHeader) {
+                const cardToToggle = detailsHeader.closest('.subject-card');
                 const wasActive = cardToToggle.classList.contains('active');
                 allCards.forEach(c => c.classList.remove('active'));
                 if (!wasActive) {
@@ -364,40 +411,32 @@
                 }
                 return;
             }
-            if (taskTitle) {
-                taskTitle.closest('.task-item-inner').classList.toggle('expanded');
+            if (taskHeader) {
+                taskHeader.closest('.task-item-inner').classList.toggle('expanded');
             }
         });
+        
+        globalAddTaskBtn.addEventListener('click', () => { modal.style.display = 'block'; renderModalTaskList(); });
+        closeModalBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+        window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
 
         modalTaskList.addEventListener('click', function(event) {
-            const target = event.target;
-            if (target.classList.contains('modal-delete-btn')) {
-                const taskKey = target.dataset.taskKey;
-                const index = parseInt(target.dataset.index, 10);
-                
+            if (event.target.classList.contains('modal-delete-btn')) {
+                const btn = event.target;
+                const taskKey = btn.dataset.taskKey;
+                const index = parseInt(btn.dataset.index, 10);
                 if (allSubjectTasks[taskKey]?.[index] !== undefined) {
                     allSubjectTasks[taskKey].splice(index, 1);
-                    if (allSubjectTasks[taskKey].length === 0) {
-                        delete allSubjectTasks[taskKey];
-                    }
+                    if (allSubjectTasks[taskKey].length === 0) delete allSubjectTasks[taskKey];
                     saveTasks();
                     renderModalTaskList();
                     const activeCard = document.querySelector(`.subject-card[data-task-key="${taskKey}"].active`);
-                    if (activeCard) {
-                        renderTasksForSubject(activeCard);
-                    }
+                    if (activeCard) renderTasksForSubject(activeCard);
                 }
             }
         });
 
-        globalAddTaskBtn.addEventListener('click', () => { 
-            modal.style.display = 'block';
-            renderModalTaskList();
-        });
-        closeModalBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-        window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
-
-        globalTaskForm.addEventListener('submit', (event) => {
+        globalTaskForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const title = document.getElementById('modal-task-title').value.trim();
             const description = document.getElementById('modal-task-desc').value.trim();
@@ -406,31 +445,26 @@
             const dueDate = document.getElementById('modal-task-duedate').value;
             const taskKey = `${day}-${subject}`;
             const newTask = { title, description, dueDate };
-
             if (!allSubjectTasks[taskKey]) allSubjectTasks[taskKey] = [];
             allSubjectTasks[taskKey].push(newTask);
             saveTasks();
-
-            const activeCard = document.querySelector(`.subject-card[data-task-key="${taskKey}"].active`);
-            if (activeCard) renderTasksForSubject(activeCard);
-            
+            const activeCard = document.querySelector(`.subject-card[data-task-key="${taskKey}"]`);
+            if (activeCard && activeCard.classList.contains('active')) {
+                renderTasksForSubject(activeCard);
+            }
             globalTaskForm.reset();
             modal.style.display = 'none';
             alert('Tugas berhasil ditambahkan!');
         });
         
-        const subjectSelect = document.getElementById('modal-task-subject');
-        const uniqueSubjects = [...new Set([...allCards].map(card => card.dataset.subject))];
-        uniqueSubjects.forEach(subject => { if (subject) { const option = document.createElement('option'); option.value = subject.replace(/\s+/g, '-'); option.textContent = subject; subjectSelect.appendChild(option); } });
-        dayButtons.forEach(button => { button.addEventListener('click', () => { allCards.forEach(c => c.classList.remove('active')); updateScheduleView(button.dataset.day); }); });
-
         const dayIndex = new Date().getDay();
         const daysMap = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
         let today = daysMap[dayIndex];
         if (today === 'sabtu' || today === 'minggu') today = 'senin';
-        updateScheduleView(today);
+        
+        switchView('jadwal');
+        updateDayView(today);
     });
     </script>
-
 </body>
 </html>
