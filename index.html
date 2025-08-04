@@ -178,8 +178,7 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. POPULATE STATIC HTML (dijalankan sekali) ---
-        // Ini memastikan HTML dasar ada sebelum script lain berjalan.
+        
         document.querySelector('.class-info-container').innerHTML = `
             <div class="wali-kelas-card">
                 <img src="ibu entin.jpg" alt="Foto Wali Kelas Bu Entin">
@@ -247,7 +246,7 @@
                 </div>
             </div>`;
 
-        // --- 2. DEKLARASI VARIABEL SETELAH HTML ADA ---
+
         const dayButtons = document.querySelectorAll('.day-btn');
         const schedules = document.querySelectorAll('.schedule-day');
         const infoDisplay = document.getElementById('info-display');
@@ -265,11 +264,6 @@
         let allSubjectTasks = JSON.parse(localStorage.getItem('subjectTasks')) || {};
         const saveTasks = () => localStorage.setItem('subjectTasks', JSON.stringify(allSubjectTasks));
         
-        // --- 3. FUNGSI-FUNGSI UTAMA ---
-        // (Semua fungsi dari dari versi stabil sebelumnya)
-
-        // --- 4. INISIALISASI & PENGATURAN EVENT ---
-        // (Semua logika event listener dari versi stabil sebelumnya)
         function updateScheduleView(day) {
             dayButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.day === day));
             schedules.forEach(schedule => schedule.classList.toggle('active', schedule.id === day));
