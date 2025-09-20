@@ -6,9 +6,88 @@
     <title>Jadwal & Biodata Kelas X RPL-2</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        :root{--biru-cerah:#3498db;--kuning-cerah:#f1c40f;--merah-cerah:#e74c3c;--putih:#ffffff;--hitam:#2c3e50;--latar-belakang:#ecf0f1;--teks:#34495e;--teks-abu:#7f8c8d;--transisi-cepat:all .3s cubic-bezier(.25,.8,.25,1)}
+        :root {
+            --biru-cerah: #3498db;
+            --kuning-cerah: #f1c40f;
+            --merah-cerah: #e74c3c;
+            --putih: #ffffff;
+            --hitam: #2c3e50;
+            --latar-belakang: #ecf0f1;
+            --teks: #34495e;
+            --teks-abu: #7f8c8d;
+            --transisi-cepat: all .3s cubic-bezier(.25, .8, .25, 1);
+
+            /* === Variabel Warna Baru untuk Preloader === */
+            --biru-langit-terang: #5DADE2;
+            --pink-cerah: #E91E63;
+            --kuning-langsat: #E6BE8A;
+        }
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Nunito',sans-serif;background-color:var(--latar-belakang);color:var(--teks)}
+        
+        /* === KODE BARU: Animasi Preloader (Diperbarui) === */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--latar-belakang);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+        .preloader-content {
+            text-align: center;
+            animation: fadeIn .8s ease-out;
+        }
+        .loader-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--kuning-langsat); /* Warna diubah */
+            margin-bottom: 25px;
+            animation: pulse 2s infinite ease-in-out; /* Animasi baru ditambahkan */
+        }
+        .loader-title .jaya-text {
+            color: var(--pink-cerah); /* Warna diubah */
+            animation: glowJaya 2.5s infinite alternate; /* Animasi baru ditambahkan */
+        }
+        .loader-bar {
+            width: 250px;
+            height: 6px;
+            background-color: #dcdde1;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background-color: var(--biru-langit-terang); /* Warna diubah */
+            border-radius: 3px;
+            animation: loadingAnimation 2.5s ease-out forwards;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        @keyframes loadingAnimation {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        /* Keyframes untuk animasi baru */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes glowJaya {
+            from { text-shadow: 0 0 5px rgba(255,255,255,0.7), 0 0 10px var(--pink-cerah); }
+            to { text-shadow: 0 0 10px rgba(255,255,255,0.7), 0 0 20px var(--pink-cerah); }
+        }
+        /* === AKHIR KODE BARU === */
+        
         .container-wrapper{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px}
         .schedule-container{width:100%;max-width:800px;background-color:var(--putih);border-radius:20px;box-shadow:0 8px 30px rgba(52,73,94,.15);overflow:hidden}
         header{background-color:var(--biru-cerah);padding:25px;text-align:center}
@@ -100,6 +179,15 @@
     </style>
 </head>
 <body>
+
+    <div id="preloader">
+        <div class="preloader-content">
+            <h1 class="loader-title">RPL 2 <span class="jaya-text">JAYA</span></h1>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
     <div class="container-wrapper">
         <div class="schedule-container">
             <header><h1>Jadwal & Biodata X RPL-2</h1></header>
@@ -180,6 +268,14 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         
+        // KODE BARU: Logika untuk Preloader
+        const preloader = document.getElementById('preloader');
+        // Sembunyikan preloader setelah 3 detik
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+        }, 3000);
+        // AKHIR KODE BARU
+
         const studentData = [
             { name: "ALVARO DANIEST FERSON SITANGGANG", gender: "L", phone: "0812-XXXX-1001", address: "Jl. Cendrawasih No. 1", dob: "10 Januari 2008", hobby: "Bermain Futsal", ambition: "Software Engineer", motto: "Lakukan yang terbaik!", photo: "https://placehold.co/150x150/3498db/ffffff?text=AD", mapUrl: "https://maps.google.com/maps?q=Jalan%20Cendrawasih%201%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
             { name: "ANANDA RACHMATU OKTASURYA", gender: "L", phone: "0812-XXXX-1002", address: "Jl. Merpati No. 2", dob: "15 Februari 2008", hobby: "Membaca Komik", ambition: "Web Developer", motto: "Terus belajar.", photo: "https://placehold.co/150x150/e74c3c/ffffff?text=AR", mapUrl: "https://maps.google.com/maps?q=Jalan%20Merpati%202%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
