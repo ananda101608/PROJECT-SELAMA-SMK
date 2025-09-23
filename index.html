@@ -46,13 +46,13 @@
         .loader-title {
             font-size: 4rem;
             font-weight: 800;
-            color: var(--kuning-langsat); /* Warna diubah */
+            color: var(--kuning-langsat);
             margin-bottom: 25px;
-            animation: pulse 2s infinite ease-in-out; /* Animasi baru ditambahkan */
+            animation: pulse 2s infinite ease-in-out;
         }
         .loader-title .jaya-text {
-            color: var(--pink-cerah); /* Warna diubah */
-            animation: glowJaya 2.5s infinite alternate; /* Animasi baru ditambahkan */
+            color: var(--pink-cerah);
+            animation: glowJaya 2.5s infinite alternate;
         }
         .loader-bar {
             width: 250px;
@@ -64,7 +64,7 @@
         .loader-progress {
             width: 0%;
             height: 100%;
-            background-color: var(--biru-langit-terang); /* Warna diubah */
+            background-color: var(--biru-langit-terang); 
             border-radius: 3px;
             animation: loadingAnimation 2.5s ease-out forwards;
         }
@@ -76,7 +76,7 @@
             from { width: 0%; }
             to { width: 100%; }
         }
-        /* Keyframes untuk animasi baru */
+       
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -86,7 +86,7 @@
             from { text-shadow: 0 0 5px rgba(255,255,255,0.7), 0 0 10px var(--pink-cerah); }
             to { text-shadow: 0 0 10px rgba(255,255,255,0.7), 0 0 20px var(--pink-cerah); }
         }
-        /* === AKHIR KODE BARU === */
+      
         
         .container-wrapper{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px}
         .schedule-container{width:100%;max-width:800px;background-color:var(--putih);border-radius:20px;box-shadow:0 8px 30px rgba(52,73,94,.15);overflow:hidden}
@@ -268,13 +268,12 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         
-        // KODE BARU: Logika untuk Preloader
-        const preloader = document.getElementById('preloader');
-        // Sembunyikan preloader setelah 3 detik
+        
+        const preloader = document.getElementById('preloader'); 
         setTimeout(() => {
             preloader.classList.add('hidden');
         }, 3000);
-        // AKHIR KODE BARU
+
 
         const studentData = [
             { name: "ALVARO DANIEST FERSON SITANGGANG", gender: "L", phone: "0812-XXXX-1001", address: "Jl. Cendrawasih No. 1", dob: "10 Januari 2008", hobby: "Bermain Futsal", ambition: "Software Engineer", motto: "Lakukan yang terbaik!", photo: "https://placehold.co/150x150/3498db/ffffff?text=AD", mapUrl: "https://maps.google.com/maps?q=Jalan%20Cendrawasih%201%20Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed" },
