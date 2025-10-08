@@ -1,0 +1,132 @@
+/* Styling untuk Navbar yang akan dipakai di semua halaman */
+body {
+    padding-top: 80px; 
+}
+
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0 5%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #FF69B4;
+    text-decoration: none;
+}
+
+/* KONTENER BARU UNTUK MENU */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.nav-menu .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu .nav-links a {
+    text-decoration: none;
+    color: #5C4033;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.nav-menu .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #FF69B4;
+    transition: width 0.3s ease;
+}
+
+.nav-menu .nav-links a:hover::after,
+.nav-menu .nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-menu .btn-logout {
+    background: linear-gradient(45deg, #FFB6C1, #FF69B4);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-menu .btn-logout:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+}
+
+/* HAMBURGER MENU (AWALNYA DISEMBUNYIKAN DI DESKTOP) */
+.hamburger {
+    display: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.hamburger .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    background-color: #5C4033;
+}
+
+
+/* MEDIA QUERY UNTUK MOBILE (LAYAR KECIL) */
+@media (max-width: 850px) {
+    /* Tampilkan ikon hamburger */
+    .hamburger {
+        display: block;
+    }
+
+    /* Sembunyikan menu navigasi */
+    .nav-menu {
+        position: absolute;
+        left: -100%; /* Sembunyikan di luar layar */
+        top: 80px;
+        background-color: #fff;
+        width: 100%;
+        padding: 30px 0;
+        flex-direction: column;
+        gap: 25px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        transition: left 0.3s ease;
+    }
+
+    /* Tampilkan menu saat aktif */
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+}
