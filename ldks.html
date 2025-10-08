@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDKS | Website Sekolah</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar-style.css">
+    <link rel="stylesheet" href="ldks-style.css"> </head>
+<body>
+    <nav class="navbar">
+       <a href="beranda.html" class="logo">Sekolah Kita</a>
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="beranda.html">Beranda</a></li>
+                    <li><a href="eskul.html">Eskul</a></li>
+                    <li><a href="ldks.html" class="active">LDKS</a></li>
+                </ul>
+                <a href="index.html" class="btn-logout">Logout</a>
+            </div>
+            <button class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+
+    <main class="ldks-container">
+
+        <header class="ldks-hero">
+            <h1>Latihan Dasar Kepemimpinan Siswa</h1>
+            <p>Membentuk Generasi Pemimpin Masa Depan</p>
+        </header>
+
+        <section class="ldks-content">
+            <h2>Detail Kegiatan</h2>
+            <p class="description">
+                LDKS adalah program wajib bagi calon pengurus OSIS untuk melatih jiwa kepemimpinan, kedisiplinan, dan kerja sama tim. Mari bergabung dan jadilah bagian dari perubahan!
+            </p>
+
+            <div class="ldks-info-box">
+                <div class="info-item">
+                    <i class="icon fa-solid fa-calendar-days"></i>
+                    <div class="details">
+                        <h3>Tanggal Pelaksanaan</h3>
+                        <p>Jumat, 25 November - Minggu, 27 November 2025</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="icon fa-solid fa-map-location-dot"></i>
+                    <div class="details">
+                        <h3>Tempat Kegiatan</h3>
+                        <p>Bumi Perkemahan Cibubur, Jakarta Timur</p>
+                    </div>
+                </div>
+                 <div class="info-item">
+                    <i class="icon fa-solid fa-user-tie"></i>
+                    <div class="details">
+                        <h3>Narahubung</h3>
+                        <p>Bapak Agus Setiawan (Wakasek Kesiswaan)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <a href="#" class="btn-register">Daftar Sekarang</a>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const navbar = document.querySelector(".navbar");
+        navbar.innerHTML = `
+           
+        `;
+        
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        });
+    </script>
+</body>
+</html>
