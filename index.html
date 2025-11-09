@@ -24,6 +24,9 @@
             --biru-langit-terang: #5dade2;
             --pink-cerah: #e91e63;
             --kuning-langsat: #e6be8a;
+            
+            /* Warna baru untuk teks seragam agar terbaca */
+            --kuning-emas-terbaca: #B8860B; 
         }
 
         * {
@@ -225,6 +228,43 @@
         .info-display strong {
             color: var(--biru-cerah);
         }
+        
+        /* === MODIFIKASI CSS UNTUK SERAGAM === */
+                /* === MODIFIKASI CSS UNTUK SERAGAM === */
+        .uniform-display {
+            padding: 10px 20px 0 20px;
+            text-align: center;
+            font-size: 1.15rem; /* Diperbesar */
+            line-height: 1.6;
+            color: var(--teks);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .uniform-label {
+            font-weight: 800; /* Bold label */
+            color: var(--teks); /* Warna teks standar */
+        }
+
+        .uniform-desc {
+            font-weight: 800; /* Bold */
+            text-decoration: underline;
+            text-decoration-color: #000000; /* Warna underline hitam pekat */
+            text-decoration-thickness: 2px;
+            color: var(--kuning-langsat); 
+        }
+
+        .uniform-special {
+            font-weight: 700;
+            color: var(--merah-cerah);
+            margin-top: 5px;
+            display: inline-block;
+            font-size: 1.05rem; /* Sedikit lebih kecil */
+        }
+
+
+        
+
 
         /* --- Class Info Section (Wali Kelas & Photo) --- */
         .class-info-container {
@@ -807,7 +847,10 @@
                         <button class="day-btn" data-day="kamis">Kamis</button>
                         <button class="day-btn" data-day="jumat">Jumat</button>
                     </div>
+                    
                     <div class="info-display"></div>
+                    <div class="uniform-display"></div>
+                    
                 </div>
             </div>
 
@@ -955,6 +998,15 @@
                     { teacher: "Elvi", subject: "Matematika", time: "12.45 - 14.15" }
                 ],
             };
+            
+            const uniformData = {
+                senin: "atasan putih celana abu abu + almamater sekolah",
+                selasa: "atasa putih celana abu abu + baju olahraga",
+                rabu: "pramuka",
+                kamis: "atasan putih celana abu abu",
+                jumat: "baju batik smkn 64 celana putih",
+                jumat_special: "batik bebas bawahan hitam"
+            };
 
             let allSubjectTasks = JSON.parse(localStorage.getItem('subjectTasks')) || {};
 
@@ -973,6 +1025,7 @@
             const globalTaskForm = document.getElementById('global-task-form');
             const modalTaskList = document.getElementById('modal-task-list');
             const subjectSelect = document.getElementById('modal-task-subject');
+            const uniformDisplay = document.querySelector('.uniform-display');
 
             // --- FUNCTIONS ---
             const saveTasks = () => {
@@ -1006,19 +1059,43 @@
                 globalAddTaskBtn.style.display = isJadwal ? 'flex' : 'none';
                 if (isJadwal) {
                     const activeDayButton = document.querySelector('.day-btn.active');
-                    updateDayView(activeDayButton ? activeDayButton.dataset.day : 'senin');
+                    const dayToUpdate = activeDayButton ? activeDayButton.dataset.day : 'senin';
+                    updateDayView(dayToUpdate);
                 }
             }
 
+            // === FUNGSI updateDayView DIMODIFIKASI ===
             function updateDayView(day) {
+                // 1. Update tombol hari yang aktif
                 dayButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.day === day));
+                
+                // 2. Tampilkan halaman jadwal untuk hari yang dipilih
                 document.querySelectorAll('.schedule-day').forEach(d => d.classList.remove('active'));
                 const dayEl = document.getElementById(day);
                 if (dayEl) {
                     dayEl.classList.add('active');
+                    // 3. Update info display (teks di atas)
                     infoDisplay.innerHTML = `Kamu sedang melihat jadwal hari <strong>${day.charAt(0).toUpperCase() + day.slice(1)}</strong>.`;
                 }
+
+                // 4. Update info seragam (teks di bawah)
+                const uniformDesc = uniformData[day]; // Ambil data seragam
+                
+                if (day === 'jumat') {
+                    // Aturan khusus untuk hari Jumat dengan kelas CSS
+                    uniformDisplay.innerHTML = `<span class="uniform-label">Seragam:</span> <span class="uniform-desc">${uniformData.jumat}</span>
+                                              <br><small class="uniform-special">
+                                                  (Khusus Minggu Terakhir: <span class="uniform-desc">${uniformData.jumat_special}</span>)
+                                              </small>`;
+                } else if (uniformDesc) {
+                    // Aturan untuk hari-hari lain dengan kelas CSS
+                    uniformDisplay.innerHTML = `<span class="uniform-label">Seragam:</span> <span class="uniform-desc">${uniformDesc}</span>`;
+                } else {
+                    // Kosongkan jika tidak ada data
+                    uniformDisplay.innerHTML = '';
+                }
             }
+            // === AKHIR MODIFIKASI FUNGSI ===
 
             function renderTasksForSubject(card) {
                 const taskKey = card.dataset.taskKey;
@@ -1253,7 +1330,7 @@
 
             // Initial page view setup
             switchView('jadwal');
-            updateDayView(today);
+            updateDayView(today); 
         });
     </script>
     </body>
